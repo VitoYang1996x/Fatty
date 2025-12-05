@@ -1,0 +1,32 @@
+services:
+  lavalink:
+    image: ghcr.io/lavalink-devs/lavalink:4
+    container_name: fatty-lavalink
+    restart: always
+    environment:
+      - _JAVA_OPTIONS=-Xmx512m
+    volumes:
+      - ./application.yml:/opt/Lavalink/application.yml
+    ports:
+      - "2333:2333"
+    networks:
+      - fatty-network
+
+  fatty-bot:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: fatty-bot
+    restart: always
+    depends_on:
+      - lavalink
+    environment:
+      - DiscordToken=${MY_TOKEN}
+      - Lavalink__BaseAddress=http://lavalink:2333
+      - Lavalink__Passphrase=youshallnotpass
+    networks:
+      - fatty-network
+    entrypoint: ["/bin/sh", "-c", "echo 'Waiting 15s...' && sleep 15 && dotnet Fatty.dll"]
+networks:
+  fatty-network:
+    driver: bridge

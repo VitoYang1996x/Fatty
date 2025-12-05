@@ -1,10 +1,13 @@
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
-using Lavalink4NET.Extensions;
 using Fatty.Services;
+using Lavalink4NET.Extensions;
 
 var builder = Host.CreateApplicationBuilder(args);
+
+var envLavalinkUri = Environment.GetEnvironmentVariable("Lavalink__BaseAddress") ?? "http://localhost:2333";
+var envLavalinkPass = Environment.GetEnvironmentVariable("Lavalink__Passphrase") ?? "youshallnotpass";
 
 builder.Services.AddSingleton<DiscordSocketClient>(sp =>
 {
@@ -23,7 +26,13 @@ builder.Services.AddSingleton<InteractionService>(sp =>
     return new InteractionService(client);
 });
 
-builder.Services.AddLavalink();
+
+builder.Services.AddLavalink()
+    .ConfigureLavalink(options =>
+    {
+        options.BaseAddress = new Uri(envLavalinkUri);
+        options.Passphrase = envLavalinkPass;
+    });
 
 builder.Services.AddHostedService<BotHostingService>();
 
