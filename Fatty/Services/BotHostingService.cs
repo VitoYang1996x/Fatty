@@ -61,8 +61,8 @@ public class BotHostingService : BackgroundService
             //register interaction commands to guild or globally
             //global registering (RegisterCommandsGloballyAsync) might affect up to an hour to take effect
             //recommand to use RegisterCommandsToGuildAsync(guildId) in dev stage,it will take effect instantly
-            //await _interactionService.RegisterCommandsGloballyAsync();
-            await _interactionService.RegisterCommandsToGuildAsync(647680254726635550);
+            await _interactionService.RegisterCommandsGloballyAsync();
+            //await _interactionService.RegisterCommandsToGuildAsync(647680254726635550);
 
             clientReady.TrySetResult();
         };
